@@ -24,7 +24,7 @@ load2pcor=function(amat)
 #   partial correlations with factor k given previous factors in column k
 # Output: loading matrix
 pcor2load=function(rhmat)
-{ if(is.vector(rhmat)) return(rhmat)
+{ if(is.vector(rhmat) | ncol(rhmat)==1) return(rhmat)
   # p>=2
   d=nrow(rhmat)
   p=ncol(rhmat)

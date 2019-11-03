@@ -94,8 +94,9 @@ partcor=function(S,given,j,k)
   S22=S[jk,jk]
   if(length(given)>1) { tem=solve(S11,S12); Om212=S21%*%tem }
   else { tem=S12/S11; Om212=outer(S21,tem) }
-  om11=1-Om212[1,1]
-  om22=1-Om212[2,2]
+  #om11=1-Om212[1,1]; om22=1-Om212[2,2]  # correct only for correlation matrix
+  om11=S[j,j]-Om212[1,1]
+  om22=S[k,k]-Om212[2,2]
   om12=S[j,k]-Om212[1,2]
   om12/sqrt(om11*om22)
 }

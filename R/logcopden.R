@@ -88,8 +88,9 @@ logdhr=function(u,v,cpar)
   p1=pnorm(tem1); p2=pnorm(tem2);
   #cdf=exp(-z1*p1-z2*p2);
   lcdf= -z1*p1-z2*p2;
-  #pdf=cdf*(p1*p2+.5*cpar*dnorm(tem2)/z2)/(u*v);
-  deriv12=p1*p2+.5*cpar*dnorm(tem2)/z2
+  #pdf=cdf*(p1*p2+.5*cpar*dnorm(tem2)/z2)/(u*v); # error
+  #deriv12=p1*p2+.5*cpar*dnorm(tem2)/z2 # error
+  deriv12=p1*p2+.5*cpar*dnorm(tem1)/z2
   lpdf= lcdf+z1+z2+log(deriv12)
   lpdf
 }

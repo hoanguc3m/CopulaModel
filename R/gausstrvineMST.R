@@ -80,7 +80,8 @@ gausstrvine.mst=function(rmat,ntrunc,iprint=F)
 initFirstG= function(rmat,iprint=F)
 { g= graph.adjacency(rmat, mode="lower",weighted=TRUE,diag=FALSE)
   E(g)$name = paste(get.edgelist(g)[,1],get.edgelist(g)[,2],sep=",")
-  for(i in 1:ecount(g)) E(g)$conditionedSet[[i]] = get.edges(g,i-1)
+  for(i in 1:ecount(g)) E(g)$conditionedSet[[i]] = get.edges(g,i)
+  # for(i in 1:ecount(g)) E(g)$conditionedSet[[i]] = get.edges(g,i-1)
   if(iprint) print(g)
   return(g)
 }
@@ -91,14 +92,19 @@ initFirstG= function(rmat,iprint=F)
 fitFirstT= function(mst,iprint=F)
 { d=ecount(mst)
   for(i in 1:d)
-  { a= get.edges(mst,i-1)+1
+  { a= get.edges(mst,i)
+    # a= get.edges(mst,i-1)+1
     # starts as  NULL so simplify, $name comes from initFirstG 
-    E(mst)[i-1]$CondName1 = V(mst)[a[1]-1]$name
-    E(mst)[i-1]$CondName2 = V(mst)[a[2]-1]$name
+    E(mst)[i]$CondName1 = V(mst)[a[1]]$name
+    E(mst)[i]$CondName2 = V(mst)[a[2]]$name
+    # E(mst)[i-1]$CondName1 = V(mst)[a[1]-1]$name
+    # E(mst)[i-1]$CondName2 = V(mst)[a[2]-1]$name
   }
   if(iprint) 
-  { print(E(mst)[0]$CondName1); print(E(mst)[1]$CondName1)
-    print(E(mst)[0]$CondName2); print(E(mst)[1]$CondName2)
+  { print(E(mst)[1]$CondName1); print(E(mst)[2]$CondName1)
+    print(E(mst)[1]$CondName2); print(E(mst)[2]$CondName2)
+    # print(E(mst)[0]$CondName1); print(E(mst)[1]$CondName1)
+    # print(E(mst)[0]$CondName2); print(E(mst)[1]$CondName2)
   }
   return(mst)
 }
@@ -114,7 +120,8 @@ buildNextG= function(oldVineGraph,rmat,iprint=F)
   if(!is.null(E(oldVineGraph)$conditioningSet)) 
   { V(g)$conditioningSet = E(oldVineGraph)$conditioningSet }
   
-  for(i in 0:(ecount(g)-1)) # g is full graph so it goes thru all pairs
+  # for(i in 0:(ecount(g)-1))
+  for(i in 1:ecount(g)) # g is full graph so it goes thru all pairs
   { con= get.edge(g,i) # internal indices for edge
     temp= get.edges(oldVineGraph,con) # edges of prev tree 
     # this is a ways of pairing up nodes (which were prev edges)
@@ -124,22 +131,28 @@ buildNextG= function(oldVineGraph,rmat,iprint=F)
     { same=intersect(temp[1,],temp[2,])
       other1=setdiff(temp[1,],same)
       other2=setdiff(temp[2,],same)
-      E(g)[i]$nodes = paste(as.character(c(other1,other2,same)+1),collapse=",")
+      E(g)[i]$nodes = paste(as.character(c(other1,other2,same)),collapse=",")
+      # E(g)[i]$nodes =paste(as.character(c(other1,other2,same)+1),collapse=",")
       name.node1= strsplit( V(g)[con[1]]$name,split=" *[,|] *")[[1]]
       name.node2= strsplit( V(g)[con[2]]$name,split=" *[,|] *")[[1]]
       schnitt=intersect(name.node1,name.node2)
       symdiff=setdiff(union(name.node1,name.node2),schnitt)
       # new edge
       E(g)[i]$name = paste(paste(symdiff, collapse= ","),paste(schnitt, collapse= ","),sep= " | ")
-      
-      l1= c(V(g)[con[1]]$conditionedSet,V(g)[con[1]]$conditioningSet)
-      l2= c(V(g)[con[2]]$conditionedSet,V(g)[con[2]]$conditioningSet)
+      l1= c(unlist(V(g)[con[1]]$conditionedSet),unlist(V(g)[con[1]]$conditioningSet))
+      l2= c(unlist(V(g)[con[2]]$conditionedSet),unlist(V(g)[con[2]]$conditioningSet))
+      # l1= c(V(g)[con[1]]$conditionedSet,V(g)[con[1]]$conditioningSet)
+      # l2= c(V(g)[con[2]]$conditionedSet,V(g)[con[2]]$conditioningSet)
       schnitt=intersect(l1,l2)
       symdiff=setdiff(union(l1,l2),schnitt)
-      suppressWarnings({E(g)$conditionedSet[i+1] = list(symdiff)})
-      suppressWarnings({E(g)$conditioningSet[i+1] = list(schnitt)})
-      conditioned=symdiff+1  # size 2 
-      conditioning=schnitt+1 # given
+      suppressWarnings({E(g)$conditionedSet[i] = list(symdiff)})
+      suppressWarnings({E(g)$conditioningSet[i] = list(schnitt)})
+      # suppressWarnings({E(g)$conditionedSet[i+1] = list(symdiff)})
+      # suppressWarnings({E(g)$conditioningSet[i+1] = list(schnitt)})
+      conditioned=symdiff  # size 2 
+      conditioning=schnitt # given
+      # conditioned=symdiff+1  # size 2
+      # conditioning=schnitt+1 # given
       needed= sort(c(conditioned,conditioning))
       ind= which(needed %in% conditioned)
       pp=partcor(rmat,conditioning,conditioned[1],conditioned[2]) 
@@ -156,7 +169,8 @@ buildNextG= function(oldVineGraph,rmat,iprint=F)
 # Fit tree
 fitT= function(mst,oldVineGraph,progress=FALSE)
 { dd=ecount(mst)
-  for(i in 0:(dd-1))
+  # for(i in 0:(dd-1))
+  for(i in 1:dd)
   { con= get.edge(mst,i)
     temp= get.edges(oldVineGraph,con)
     same=intersect(temp[1,],temp[2,])
@@ -190,20 +204,25 @@ asRVA= function(RVine)
   }
   correspondingCors[[n-1]] = list()
   correspondingCors[[n-1]][[1]] = 0
-  A=matrix(-1,n,n); pc=matrix(NA,n,n)
+  A=matrix(0,n,n); pc=matrix(NA,n,n)
+  # A=matrix(-1,n,n); pc=matrix(NA,n,n)
   for(j in n:2)
   { k=n+1-j
-    w=conditionedSets[[j-1]][[1]][1]
+    w=unlist(conditionedSets[[j-1]][[1]])[1]
+    # w=conditionedSets[[j-1]][[1]][1]
     A[j,j]=w
-    A[(j-1),j]=conditionedSets[[j-1]][[1]][2]
+    A[(j-1),j]=unlist(conditionedSets[[j-1]][[1]])[2]
+    # A[(j-1),j]=conditionedSets[[j-1]][[1]][2]
     pc[(j-1),j]=correspondingCors[[j-1]][[1]][1]
     if(j==2)
-    { A[(j-1),(j-1)]=conditionedSets[[j-1]][[1]][2] }
+    { A[(j-1),(j-1)]=unlist(conditionedSets[[j-1]][[1]])[2] }
+    # { A[(j-1),(j-1)]=conditionedSets[[j-1]][[1]][2] }
     else
     { for(ii in (j-2):1)
       { i=n+1-ii
         for(jj in 1:length(conditionedSets[[ii]]))
-        { cs=conditionedSets[[n-i+1]][[jj]]
+        { cs=unlist(conditionedSets[[n-i+1]][[jj]])
+          # cs=conditionedSets[[n-i+1]][[jj]]
           if(cs[1]==w)
           { A[ii,j]=cs[2]; break }
           else if(cs[2]==w)
@@ -215,7 +234,7 @@ asRVA= function(RVine)
       }
     }
   }
-  A=A+1
+  # A=A+1
   # M is vinearray in format of VineCopula, Cor with M=A[n:1,n:1] etc
   M=A[n:1,n:1]; Cor=pc[n:1,n:1]
   return(list(VineA=A,pc=pc,Matrix=M,Cor=Cor))

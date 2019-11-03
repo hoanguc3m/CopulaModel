@@ -75,8 +75,8 @@ f90irfisherinfo1 and f90irfisherinfo2.
 \code{\link{factorcopmle}}
 }
 \references{
-Nikoloulopoulos A K and Joe H (2014).
-Factor copula models for item response data, Psychometrika.
+Nikoloulopoulos A K and Joe H (2015).
+Factor copula models for item response data, Psychometrika, 80, 126-150.
 }
 \examples{
 data(ltmconv)

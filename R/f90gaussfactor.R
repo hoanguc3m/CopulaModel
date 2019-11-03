@@ -85,9 +85,17 @@ factanal.co=function(factors,start,data=1,cormat=NULL,n=100,prlevel=0,mxiter=100
   mle=nlm(pfactnllk,p=start,Robs=cormat,nsize=n,hessian=F,
     iterlim=mxiter,print.level=prlevel,check.analyticals=F)
   rhmat=matrix(mle$estimate,d,p)
-  amat=pcor2load(rhmat)
-  load=varimax(amat)
-  list(nllk=mle$minimum,rhmat=rhmat,loading=as.matrix(load$loadings[,1:p]),rotmat=load$rotmat)
+  if(p>=2)
+  { amat=pcor2load(rhmat)
+    load=varimax(amat)
+    loading=as.matrix(load$loadings[,1:p])
+    rotmat=load$rotmat
+  }
+  else # count #negative loadings and reverse sign if needed
+  { nneg=sum(rhmat<0)
+    if(nneg>d/2) { rotmat=-1; loading=-rhmat } else { rotmat=1; loading=rhmat }
+  }
+  list(nllk=mle$minimum,rhmat=rhmat,loading=loading,rotmat=rotmat)
 }
 
 #============================================================

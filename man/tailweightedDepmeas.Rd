@@ -60,6 +60,10 @@ negation of the data set.}
 \references{
 Krupskii P (2014). Structured Factor Copulas and Tail Inference.
 PhD thesis, University of British Columbia.
+
+Krupskii P and Joe H (2015).
+Tail-weighted measures of dependence.
+J Applied Statistics, 42, 614-629.
 }
 \examples{
 th1=gum.b2cpar(.7)

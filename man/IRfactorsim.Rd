@@ -42,8 +42,8 @@ choices include qcondfrk, qcondgum, qcondgumr, qcondbvtcop with fixed nu2. }
 \code{\link{factorcopsim}}
 }
 \references{
-Nikoloulopoulos A K and Joe H (2014).
-Factor copula models for item response data, Psychometrika.
+Nikoloulopoulos A K and Joe H (2015).
+Factor copula models for item response data, Psychometrika, 80, 126-150.
 }
 \details{
 These interface to sim1fact and sim1fact, with discretization based on ucuts.

@@ -43,8 +43,9 @@ $fnval, $grad, $hess for f90str1nllk and f90str2nllk.
 \code{\link{mvtfact}}
 }
 \references{
-Krupskii P and Joe H (2013).
+Krupskii P and Joe H (2015).
 Structured factor copula models: theory, inference and computation.
+J Multivariate Analysis, 138, 19-33.
 }
 \details{
 f90str1nllk: "t", "tbb1" (t for group latent to global latent,

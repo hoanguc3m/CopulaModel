@@ -9,4 +9,3 @@ Depends: R (>= 2.9.0), cubature
 Description: Software for book: Dependence Modeling with Copulas, Chapman & Hall/CRC, 2014.  
 License: GPL-3
 LazyLoad: yes
-Packaged: 2016-03-10 16:08:22 UTC; up2mike

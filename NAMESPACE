@@ -1,11 +1,12 @@
 useDynLib(CopulaModel)
 import(cubature)
 # other libraries are need for specific functions and are not included here:
-# mvtnorm, fGarch, igraph0, combinat, abind
+# mvtnorm, fGarch, igraph, combinat, abind
 # pmvnorm (library mvtnorm) is used by functions pmfmordprobit, mhrA
 # garchFit (library fGarch) is used by function gfiltersubset
-# minimum.spanning.tree and others in library igraph0 are used by
+# minimum.spanning.tree and others in library igraph are used by
 #                    function gausstrvine.mst
+#    (updated August 2015 to use igraph instead of igraph0)
 # permn (library combinat) is used by functions mprobitvsRvine, f90mprobitvsRvine
 # abind (library abind) is used by functions ir1factpmf, ir2factpmf
 
@@ -209,7 +210,10 @@ export(vineResidVar)
 # best Gaussian truncated vine, call to f90 code
 export(gausstrvine, gausstrvine.nonuniq)
 # sequential minimum spannung trees using partial correlations
-export(gausstrvine.mst) # requires igraph0 package
+export(gausstrvine.mst) # requires igraph package
+# genetic algorithm + minimum spannung trees using partial correlations
+# added August 2015
+export(gausstrvine.galg) # requires igraph package
 
 # Gaussian factor models: loadings to partial correlations
 export(load2pcor,pcor2load)
